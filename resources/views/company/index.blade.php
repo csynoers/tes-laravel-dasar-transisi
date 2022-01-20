@@ -22,7 +22,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Website</th>
-                                <th>Actions</th>
+                                <th style="width: 116px">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,6 +48,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $companies->links() }}
+                    </div>
                 </div>
             </div>
         </div>

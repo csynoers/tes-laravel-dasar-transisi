@@ -35,7 +35,7 @@
                             <label for="company" class="col-md-4 col-form-label text-md-end">{{ __('Company Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="company" type="text" class="form-control @error('company') is-invalid @enderror" name="company" value="{{ old('company') }}" required autocomplete="company" autofocus>
+                                <select id="company" class="form-control @error('company') is-invalid @enderror" name="company" required autocomplete="company" autofocus></select>
 
                                 @error('company')
                                     <span class="invalid-feedback" role="alert">
@@ -73,4 +73,33 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#company').select2({
+        placeholder: 'Select an company name',
+        allowClear: true,
+        ajax: {
+            url: '/ajax/company',
+            dataType: 'json',
+            delay: 250, // wait 250 milliseconds before triggering the request
+            processResults: function (data, params) {
+                params.term = params.term || '';
+                params.page = params.page || 1;
+                return {
+                    results:  $.map(data.results, function (item) {
+                        // console.log(item)
+                        return {
+                            text: item.name,
+                            id: item.name
+                        }
+                    }),
+                    // pagination: data.pagination
+                    pagination: {
+                        more: (params.page * 10) < data.count_filtered
+                    }
+                };
+            },
+            cache: true
+        }
+    });
+</script>
 @endsection

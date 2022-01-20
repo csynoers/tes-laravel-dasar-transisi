@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
@@ -16,7 +17,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->get();
+        $companies = Company::paginate(5);
         return view('company.index', compact('companies'));   
     }
 
@@ -98,5 +99,50 @@ class CompanyController extends Controller
         $company->delete();
 
         return redirect()->route('company.index')->with('success', 'Company has been deleted!');
+    }
+
+    /**
+    * Show the application dataAjax.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function dataAjax(Request $request)
+    {
+    	// $data = [];
+
+        // if($request->has('q')){
+        //     $search = $request->q;
+        //     $data = Company::select("id","name")
+        //     		->where('name','LIKE',"%$search%")
+        //     		->get();
+        // }
+        // return response()->json($data);
+        //controller
+        // dd($request->ajax());
+        if ($request->ajax())
+        {
+            // $page = $request->page;
+            // $resultCount = 2;
+            
+            // $offset = ($page - 1) * $resultCount;
+            
+            $companies = Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->get();
+            // $companies = Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->skip($offset)->take($resultCount)->get();
+            
+            // $count = count(Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->get());
+            // $endCount = $offset + $resultCount;
+            // $morePages = $count > $endCount;
+            
+            // return $count;
+            $results = array(
+                "results" => $companies,
+                "count_filtered" => count($companies)
+                // "pagination" => array(
+                //     "more" => $morePages
+                // )
+            );
+
+            return response()->json($results);
+        }
     }
 }
