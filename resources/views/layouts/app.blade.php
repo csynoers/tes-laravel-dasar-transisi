@@ -35,6 +35,7 @@
                     <ul class="navbar-nav me-auto">
                         @auth
                         <li class="nav-item"><a class="nav-link" href="{{ route('company.index') }}">{{ __('Company') }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('employee.index') }}">{{ __('Employee') }}</a></li>
                         @endauth
                     </ul>
 
