@@ -31,7 +31,7 @@
                                     <td>{{ $company->name }}</td>
                                     <td>{{ $company->email }}</td>
                                     <td>
-
+                                        <a href="{{ route('company.edit', $company->id) }}" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
                                     </td>
                                 </tr>
                             @empty

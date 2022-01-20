@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Http\Request;
 use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -48,32 +49,41 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Company $company)
     {
-        //
+        return view('company.edit', compact('company'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\UpdateCompanyRequest  $request
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCompanyRequest $request, Company $company)
     {
-        //
+        $request->validated();
+        
+        if ( $request->file('logo_company') ) {
+            Storage::delete($company->logo);
+            
+            $company->update($request->validated()+ ['logo' => $request->file('logo_company')->store('company') ]);
+        } else {
+            $company->update($request->validated());
+        }
+        return redirect()->route('company.index');
     }
 
     /**
