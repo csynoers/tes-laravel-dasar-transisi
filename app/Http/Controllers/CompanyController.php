@@ -108,38 +108,13 @@ class CompanyController extends Controller
     */
     public function dataAjax(Request $request)
     {
-    	// $data = [];
-
-        // if($request->has('q')){
-        //     $search = $request->q;
-        //     $data = Company::select("id","name")
-        //     		->where('name','LIKE',"%$search%")
-        //     		->get();
-        // }
-        // return response()->json($data);
-        //controller
-        // dd($request->ajax());
         if ($request->ajax())
-        {
-            // $page = $request->page;
-            // $resultCount = 2;
-            
-            // $offset = ($page - 1) * $resultCount;
-            
-            $companies = Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->get();
-            // $companies = Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->skip($offset)->take($resultCount)->get();
-            
-            // $count = count(Company::where('name', 'LIKE',  '%' . $request->term. '%')->orderBy('name')->get());
-            // $endCount = $offset + $resultCount;
-            // $morePages = $count > $endCount;
-            
-            // return $count;
+        {            
+            $companies = Company::filter(request(['term']))->get();
+
             $results = array(
                 "results" => $companies,
                 "count_filtered" => count($companies)
-                // "pagination" => array(
-                //     "more" => $morePages
-                // )
             );
 
             return response()->json($results);

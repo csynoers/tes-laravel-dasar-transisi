@@ -15,6 +15,8 @@
                     @endif
                     
                     <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Add New Employee</a>
+                    <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Import from Excel</a>
+                    <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Export PDF</a>
                     <table class="table">
                         <thead>
                             <tr>
