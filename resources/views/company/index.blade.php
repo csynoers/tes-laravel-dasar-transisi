@@ -8,9 +8,9 @@
                 <div class="card-header">{{ __('Companies') }}</div>
 
                 <div class="card-body">
-                    @if (session('status'))
+                    @if (session('success'))
                         <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            {{ session('success') }}
                         </div>
                     @endif
                     
@@ -32,6 +32,11 @@
                                     <td>{{ $company->email }}</td>
                                     <td>
                                         <a href="{{ route('company.edit', $company->id) }}" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
+                                        <form action="{{ route('company.destroy', $company->id) }}" method="post" class="d-inline-flex">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{{ __('Are you sure?') }}')">{{ __('Delete') }}</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty

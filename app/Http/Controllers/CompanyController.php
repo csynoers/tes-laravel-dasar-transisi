@@ -40,7 +40,7 @@ class CompanyController extends Controller
     {
         Company::create($request->validated() + ['logo' => $request->file('logo_company')->store('company') ]);
 
-        return redirect()->route('company.index');
+        return redirect()->route('company.index')->with('success', 'Company has been created!');
     }
 
     /**
@@ -83,17 +83,20 @@ class CompanyController extends Controller
         } else {
             $company->update($request->validated());
         }
-        return redirect()->route('company.index');
+        return redirect()->route('company.index')->with('success', 'Company has been updated!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Company  $company
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Company $company)
     {
-        //
+        Storage::delete($company->logo);
+        $company->delete();
+
+        return redirect()->route('company.index')->with('success', 'Company has been deleted!');
     }
 }
