@@ -45,6 +45,20 @@
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <label for="website" class="col-md-4 col-form-label text-md-end">{{ __('Website Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="website" type="url" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ $company->website }}" required autocomplete="website" autofocus>
+
+                                @error('website')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                         
                         <div class="row mb-3">
                             <label for="logoCompany" class="col-md-4 col-form-label text-md-end">{{ __('Logo') }}</label>
@@ -52,7 +66,6 @@
                                 <img src="{{ asset('storage/'.$company->logo) }}" alt="{{ $company->name }}" class="img-thumbnail">
                             </div>
                             <div class="col-md-6 offset-md-4">
-                                <input type="hidden" name="old_logo" value="{{ $company->logo }}">
                                 <input id="logoCompany" type="file" class="form-control @error('logo_company') is-invalid @enderror" name="logo_company" >
 
                                 @error('logo_company')

@@ -21,6 +21,7 @@
                                 <th>Logo</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Website</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -30,6 +31,7 @@
                                     <td><img src="{{ asset('storage/'.$company->logo) }}" alt="{{ $company->name }}" class="img-thumbnail" style="height: 50px"></td>
                                     <td>{{ $company->name }}</td>
                                     <td>{{ $company->email }}</td>
+                                    <td>{{ $company->website }}</td>
                                     <td>
                                         <a href="{{ route('company.edit', $company->id) }}" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
                                         <form action="{{ route('company.destroy', $company->id) }}" method="post" class="d-inline-flex">
@@ -41,7 +43,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4">No companies</td>
+                                    <td colspan="5">No companies</td>
                                 </tr>
                             @endforelse
                         </tbody>

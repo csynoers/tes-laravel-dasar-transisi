@@ -31,6 +31,11 @@ class UpdateCompanyRequest extends FormRequest
                 'required',
                 Rule::unique('companies')->ignore($this->company)    
             ],
+            'website' => [
+                'required',
+                'url',
+                Rule::unique('companies')->ignore($this->company)    
+            ],
             'logo_company' => 'image|file|mimes:png|dimensions:min_width=100,min_height=100|max:2048'
         ];
     }

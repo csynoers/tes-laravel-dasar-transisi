@@ -46,6 +46,20 @@
                         </div>
                         
                         <div class="row mb-3">
+                            <label for="website" class="col-md-4 col-form-label text-md-end">{{ __('Website Address') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="website" type="url" class="form-control @error('website') is-invalid @enderror" name="website" value="{{ old('website') }}" required autocomplete="website" autofocus>
+
+                                @error('website')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
                             <label for="logoCompany" class="col-md-4 col-form-label text-md-end">{{ __('Logo') }}</label>
 
                             <div class="col-md-6">
