@@ -12,10 +12,10 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="company" class="col-md-4 col-form-label text-md-end">{{ __('Company Name') }}</label>
+                            <label for="companyExportPDF" class="col-md-4 col-form-label text-md-end">{{ __('Company Name') }}</label>
 
                             <div class="col-md-6">
-                                <select id="company" class="form-control" name="company" ></select>
+                                <select id="companyExportPDF" class="form-control company" name="company" ></select>
                             </div>
                         </div>
 
@@ -23,6 +23,51 @@
                             <div class="col-md-8 offset-md-4">
                                 <button type="submit" class="btn btn-outline-primary">
                                     {{ __('Export Employees') }}
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>                    
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">{{ __('Import Employees from Excel') }}</div>
+
+                <div class="card-body">
+                    <form action="{{ route('employee.import') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="row mb-3">
+                            <label for="companyImport" class="col-md-4 col-form-label text-md-end">{{ __('Company Name') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="companyImport" class="form-control company" name="company" required></select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="excelFile" class="col-md-4 col-form-label text-md-end">{{ __('Excel File') }}</label>
+
+                            <div class="col-md-6">
+                                <input type="file" name="file" class="form-control" required>
+                            </div>
+                            @if (count($errors) > 0)
+                                <div class="col-md-6 offset-md-4">
+                                  <div class="alert alert-danger alert-dismissible">
+                                      <h5><i class="icon fa fa-ban"></i> Error!</h5>
+                                      @foreach($errors->all() as $error)
+                                      {{ $error }} <br>
+                                      @endforeach      
+                                  </div>
+                                </div>
+                            @endif
+                        </div>
+
+
+                        <div class="row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    {{ __('Import Employees') }}
                                 </button>
                             </div>
                         </div>
@@ -42,7 +87,6 @@
                     @endif
                     
                     <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Add New Employee</a>
-                    <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Import from Excel</a>
                     <table class="table">
                         <thead>
                             <tr>
@@ -83,7 +127,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    $('#company').select2({
+    $('.company').select2({
         placeholder: 'Select an company name',
         allowClear: true,
         ajax: {

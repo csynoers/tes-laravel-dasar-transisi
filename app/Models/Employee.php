@@ -12,6 +12,13 @@ class Employee extends Model
     protected $fillable= ['name', 'company', 'email'];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    // protected $with = ['company',];
+
+    /**
      * Scope a query to only include filter employees.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -30,5 +37,13 @@ class Employee extends Model
         $query->when($filters['email'] ?? false, function($query, $search) {
             return $query->where('email', 'LIKE',  '%' . $search. '%');
         });
+    }
+
+    /**
+     * Get the company that owns the employee.
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company', 'name');
     }
 }

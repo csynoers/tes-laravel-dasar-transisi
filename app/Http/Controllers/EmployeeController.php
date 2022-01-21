@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Imports\EmployeesImport;
 use App\Models\Employee;
 use PDF;
 
@@ -94,6 +96,12 @@ class EmployeeController extends Controller
         return redirect()->route('employee.index')->with('success', 'Employee has been deleted!');
     }
 
+    /**
+     * Export PDF.
+     *
+     * @param  \App\Http\Requests  $request
+     * @return \Illuminate\Http\Response
+     */
     public function exportPdf(Request $request)
     {
         $employees = Employee::latest()->filter(request(['company']))->get();
@@ -101,5 +109,11 @@ class EmployeeController extends Controller
         $pdf->loadView('employee.pdf', compact('employees'));
 
         return $pdf->stream();
+    }
+
+    public function importExcel(){
+        Excel::import(new EmployeesImport,request()->file('file'));
+             
+        return redirect()->route('employee.index')->with('success', 'Employee has been imported!');
     }
 }

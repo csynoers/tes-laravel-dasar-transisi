@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,11 +23,13 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => 'auth'], function(){
-    Route::resource('company', App\Http\Controllers\CompanyController::class);
-    Route::resource('employee', App\Http\Controllers\EmployeeController::class);
+    Route::resource('company', CompanyController::class);
+    Route::resource('employee', EmployeeController::class);
     
     // ajax
-    Route::get('ajax/company', [App\Http\Controllers\CompanyController::class, 'dataAjax']);
-    // pdf
-    Route::post('employee/pdf', [\App\Http\Controllers\EmployeeController::class, 'exportPdf'])->name('employee.pdf');
+    Route::get('ajax/company', [CompanyController::class, 'dataAjax']);
+    // export pdf
+    Route::post('employee/pdf', [EmployeeController::class, 'exportPdf'])->name('employee.pdf');
+    // import excel
+    Route::post('employee/import', [\mployeeController::class, 'importExcel'])->name('employee.import');
 });
