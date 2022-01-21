@@ -42,7 +42,11 @@
                             <label for="companyImport" class="col-md-4 col-form-label text-md-end">{{ __('Company Name') }}</label>
 
                             <div class="col-md-6">
-                                <select id="companyImport" class="form-control company" name="company" required></select>
+                                <select id="companyImport" class="form-control company" name="company" required>
+                                    @if (old('company'))
+                                        <option value="{{ old('company') }}" selected="selected">{{ old('company') }}</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-3">
