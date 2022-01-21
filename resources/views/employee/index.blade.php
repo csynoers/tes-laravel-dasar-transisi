@@ -49,7 +49,7 @@
                             <label for="excelFile" class="col-md-4 col-form-label text-md-end">{{ __('Excel File') }}</label>
 
                             <div class="col-md-6">
-                                <input type="file" name="file" class="form-control" required>
+                                <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
                             </div>
                             @if (count($errors) > 0)
                                 <div class="col-md-6 offset-md-4">

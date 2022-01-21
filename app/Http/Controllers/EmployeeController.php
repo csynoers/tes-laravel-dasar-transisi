@@ -112,7 +112,7 @@ class EmployeeController extends Controller
     }
 
     public function importExcel(){
-        Excel::import(new EmployeesImport,request()->file('file'));
+        Excel::import(new EmployeesImport, request()->file('file'));
              
         return redirect()->route('employee.index')->with('success', 'Employee has been imported!');
     }

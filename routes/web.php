@@ -31,5 +31,5 @@ Route::group(['middleware' => 'auth'], function(){
     // export pdf
     Route::post('employee/pdf', [EmployeeController::class, 'exportPdf'])->name('employee.pdf');
     // import excel
-    Route::post('employee/import', [\mployeeController::class, 'importExcel'])->name('employee.import');
+    Route::post('employee/import', [EmployeeController::class, 'importExcel'])->name('employee.import');
 });
