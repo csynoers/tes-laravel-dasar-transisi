@@ -53,12 +53,12 @@
                             </div>
                             @if (count($errors) > 0)
                                 <div class="col-md-6 offset-md-4">
-                                  <div class="alert alert-danger alert-dismissible">
-                                      <h5><i class="icon fa fa-ban"></i> Error!</h5>
-                                      @foreach($errors->all() as $error)
-                                      {{ $error }} <br>
-                                      @endforeach      
-                                  </div>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <h5><i class="icon fa fa-ban"></i> Error! <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></h5>
+                                        @foreach($errors->all() as $error)
+                                        {{ $error }} <br>
+                                        @endforeach      
+                                    </div>
                                 </div>
                             @endif
                         </div>

@@ -24,7 +24,7 @@ class ImportEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'file' => 'mimes:xlsx, xls',
         ];
     }
 }

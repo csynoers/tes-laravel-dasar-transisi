@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportEmployeeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Facades\Excel;
@@ -111,7 +112,8 @@ class EmployeeController extends Controller
         return $pdf->stream();
     }
 
-    public function importExcel(){
+    public function importExcel(ImportEmployeeRequest $request){
+        $request->validated();
         Excel::import(new EmployeesImport, request()->file('file'));
              
         return redirect()->route('employee.index')->with('success', 'Employee has been imported!');
