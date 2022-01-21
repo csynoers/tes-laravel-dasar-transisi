@@ -25,5 +25,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::resource('company', App\Http\Controllers\CompanyController::class);
     Route::resource('employee', App\Http\Controllers\EmployeeController::class);
     
+    // ajax
     Route::get('ajax/company', [App\Http\Controllers\CompanyController::class, 'dataAjax']);
+    // pdf
+    Route::post('employee/pdf', [\App\Http\Controllers\EmployeeController::class, 'exportPdf'])->name('employee.pdf');
 });

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
+use PDF;
 
 class EmployeeController extends Controller
 {
@@ -15,7 +18,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::latest()->get();
+        $employees = Employee::latest()->paginate(5);
         return view('employee.index', compact('employees'));
     }
 
@@ -89,5 +92,14 @@ class EmployeeController extends Controller
         $employee->delete();
 
         return redirect()->route('employee.index')->with('success', 'Employee has been deleted!');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $employees = Employee::latest()->filter(request(['company']))->get();
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('employee.pdf', compact('employees'));
+
+        return $pdf->stream();
     }
 }
