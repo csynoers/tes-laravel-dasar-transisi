@@ -1,0 +1,13 @@
+{
+    "name": "Transisi",
+    "alias": "transisi",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Transisi\\Providers\\TransisiServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
