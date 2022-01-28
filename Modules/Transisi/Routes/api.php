@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/transisi', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/transisi', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::middleware('auth:api')->group(function () {
+    Route::resource('company', CompanyController::class);
+    Route::resource('employee', CompanyController::class);
 });
