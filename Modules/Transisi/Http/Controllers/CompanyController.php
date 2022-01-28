@@ -70,9 +70,11 @@ class CompanyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse 
     {
-        //
+        return response()->json([
+            'data' => [$request,$id]
+        ]);
     }
 
     /**
@@ -80,7 +82,7 @@ class CompanyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse 
     {
         CompanyRepository::deleteCompany($id);
 
