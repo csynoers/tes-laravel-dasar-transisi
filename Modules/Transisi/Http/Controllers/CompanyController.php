@@ -47,9 +47,11 @@ class CompanyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return view('transisi::show');
+        return response()->json([
+            'data' => CompanyRepository::find($id),
+        ]);
     }
 
     /**

@@ -14,7 +14,7 @@ class CompanyRepository
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return Company::find($id);
     }
 
     public function fetch(array $params)
