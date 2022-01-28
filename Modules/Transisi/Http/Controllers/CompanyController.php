@@ -82,6 +82,8 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        CompanyRepository::deleteCompany($id);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

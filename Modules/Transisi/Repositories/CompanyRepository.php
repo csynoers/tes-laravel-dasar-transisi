@@ -27,5 +27,10 @@ class CompanyRepository
         return $query->paginate();
     }
 
+    public function deleteCompany($id)
+    {
+        return Company::destroy($id);
+    }
+
     // method lainya ...
 }
