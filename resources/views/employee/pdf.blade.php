@@ -27,6 +27,7 @@
                 <th>Name</th>
                 <th>Company</th>
                 <th>Email</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
                     <td>{{ $employee->name }}</td>
                     <td>{{ $employee->company }}</td>
                     <td>{{ $employee->email }}</td>
+                    <td>{{ $status[$employee->status] }}</td>
                 </tr>
             @empty
                 <tr>

@@ -14,7 +14,7 @@
                         </div>
                     @endif
                     
-                    <form action="{{ route('employee.update', $employee->id) }}" method="post" enctype="multipart/form-data">
+                    <form action="/employee/{{ $employee->id }}" method="post" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
 
@@ -55,6 +55,27 @@
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $employee->email }}" required autocomplete="email" autofocus>
 
                                 @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="status" class="col-md-4 col-form-label text-md-end">{{ __('Status') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="status" class="form-control @error('status') is-invalid @enderror" name="status" required autocomplete="status" autofocus>
+                                    @foreach ($status as $key => $item)
+                                        @php
+                                            $selected = ($key==$employee->status) ? 'selected' : null ;
+                                        @endphp
+                                        <option value="{{ $key }}" {{ $selected }}>{{ $item }}</option>
+                                    @endforeach
+                                </select>
+
+                                @error('status')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

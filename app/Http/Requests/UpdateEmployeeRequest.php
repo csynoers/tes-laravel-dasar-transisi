@@ -35,6 +35,7 @@ class UpdateEmployeeRequest extends FormRequest
                 'required',
                 Rule::unique('employees')->ignore($this->employee)    
             ],
+            'status' => 'required'
         ];
     }
 }

@@ -9,7 +9,7 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable= ['name', 'company', 'email'];
+    protected $fillable= ['name', 'company', 'email', 'status'];
 
     /**
      * The relationships that should always be loaded.

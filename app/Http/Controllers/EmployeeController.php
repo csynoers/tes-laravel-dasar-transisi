@@ -10,6 +10,7 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Imports\EmployeesImport;
 use App\Models\Employee;
+use Modules\Transisi\Constants\Status;
 use PDF;
 
 class EmployeeController extends Controller
@@ -21,8 +22,9 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+        $status = Status::labels();
         $employees = Employee::latest()->paginate(5);
-        return view('employee.index', compact('employees'));
+        return view('employee.index', compact(['employees','status']));
     }
 
     /**
@@ -32,7 +34,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employee.create');
+        $status = Status::labels();
+
+        return view('employee.create', compact('status'));
     }
 
     /**
@@ -45,7 +49,7 @@ class EmployeeController extends Controller
     {
         Employee::create($request->validated());
 
-        return redirect()->route('employee.index')->with('success', 'Employee has been created!');
+        return redirect()->to('/employee')->with('success', 'Employee has been created!');
     }
 
     /**
@@ -67,7 +71,9 @@ class EmployeeController extends Controller
      */
     public function edit(Employee  $employee)
     {
-        return view('employee.edit', compact('employee'));
+        $status = Status::labels();
+
+        return view('employee.edit', compact(['employee','status']));
     }
 
     /**
@@ -81,7 +87,7 @@ class EmployeeController extends Controller
     {
         $employee->update($request->validated());
 
-        return redirect()->route('employee.index')->with('success', 'Employee has been updated!');
+        return redirect()->to('/employee')->with('success', 'Employee has been updated!');
     }
 
     /**
@@ -105,9 +111,10 @@ class EmployeeController extends Controller
      */
     public function exportPdf(Request $request)
     {
+        $status = Status::labels();
         $employees = Employee::latest()->filter(request(['company']))->get();
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('employee.pdf', compact('employees'));
+        $pdf->loadView('employee.pdf', compact(['employees','status']));
 
         return $pdf->stream();
     }
@@ -116,6 +123,6 @@ class EmployeeController extends Controller
         $request->validated();
         Excel::import(new EmployeesImport, request()->file('file'));
              
-        return redirect()->route('employee.index')->with('success', 'Employee has been imported!');
+        // return redirect()->to('/employee')->with('success', 'Employee has been imported!');
     }
 }

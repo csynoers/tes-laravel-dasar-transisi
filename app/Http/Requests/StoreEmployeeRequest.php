@@ -27,6 +27,7 @@ class StoreEmployeeRequest extends FormRequest
             'name' => 'required',
             'company' => 'required',
             'email' => 'email|required|unique:employees',
+            'status' => 'required',
         ];
     }
 }

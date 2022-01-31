@@ -90,13 +90,14 @@
                         </div>
                     @endif
                     
-                    <a href="{{ route('employee.create') }}" class="btn btn-outline-primary">Add New Employee</a>
+                    <a href="/employee/create" class="btn btn-outline-primary">Add New Employee</a>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Company</th>
                                 <th>Email</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -106,8 +107,9 @@
                                     <td>{{ $employee->name }}</td>
                                     <td>{{ $employee->company }}</td>
                                     <td>{{ $employee->email }}</td>
+                                    <td>{{ $status[$employee->status] }}</td>
                                     <td>
-                                        <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
+                                        <a href="/employee/{{ $employee->id }}/edit" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
                                         <form action="{{ route('employee.destroy', $employee->id) }}" method="post" class="d-inline-flex">
                                             @method('DELETE')
                                             @csrf

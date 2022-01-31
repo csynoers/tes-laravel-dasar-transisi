@@ -31,14 +31,18 @@ class EmployeesImport implements ToCollection, WithHeadingRow
          Validator::make($rows->toArray(), [
              '*.name' => 'required',
              '*.email' => 'email|required|unique:employees',
+             '*.status' => 'required',
          ])->validate();
-  
-        foreach ($rows as $row) {
-            return new Employee([
+        
+        foreach ($rows as $key => $row) {
+            $rows[$key] = [
                 'name' => $row['name'],
                 'company' => request('company'),
                 'email' => $row['email'],
-            ]);
+                'status' => $row['status'],
+            ];
         }
+
+        dd($rows);
     }
 }
