@@ -20,5 +20,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
     Route::resource('company', CompanyController::class);
-    Route::resource('employee', CompanyController::class);
+    Route::resource('employee', EmployeeController::class);
 });

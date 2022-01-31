@@ -82,7 +82,7 @@ class CompanyController extends Controller
     {
         $status = 200;
         $response['success'] = true;
-        $response['data'] = $this->companyRepository->find($id);
+        $response['data'] = $this->companyService->find($id);
         $response['message'] = 'Company retrieved successfully.';
         
         if (empty($response['data'])) {

@@ -15,6 +15,12 @@ class CompanyService
         $this->companyRepository = $companyRespository;
     }
 
+    public function find($id)
+    {
+        return $this->companyRepository->find($id);
+    }
+
+
     public function fetch()
     {
         return $this->companyRepository->fetch();

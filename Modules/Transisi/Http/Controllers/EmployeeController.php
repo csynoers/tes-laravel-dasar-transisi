@@ -2,28 +2,42 @@
 
 namespace Modules\Transisi\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Transisi\Services\EmployeeService;
 
 class EmployeeController extends Controller
 {
+    protected $employeeService;
+    
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        return view('transisi::index');
-    }
+        $status = 200;
+        $response['success'] = true;
+        $response['message'] = 'Employees retrieved successfully.';
+        
+        try {
+            $response['data'] = $this->employeeService->fetch();
+        } catch (Exception $e) {
+            $status = 404;
+            $response['success'] = false;
+            $response['data'] = $e->getMessage();
+            $response['message'] = 'Employees not found.';
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('transisi::create');
+        return response()->json($response, $status);
     }
 
     /**
@@ -33,7 +47,30 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only([
+            'name',
+            'company',
+            'email',
+            'status',
+        ]);
+
+        $status = 201;
+        $response['success'] = true;
+        $response['data'] = $data;
+        $response['message'] = 'Employee created successfully.';
+
+        try {
+            $response['data'] = $this->employeeService->save($data);
+        } catch (Exception $e) {
+
+            $status = 500;
+            $response['success'] = false;
+            $response['data'] = $data;
+            $response['message'] = $e->getMessage();
+
+        }
+
+        return response()->json($response, $status);
     }
 
     /**
@@ -41,19 +78,20 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return view('transisi::show');
-    }
+        $status = 200;
+        $response['success'] = true;
+        $response['data'] = $this->employeeService->find($id);
+        $response['message'] = 'Employee retrieved successfully.';
+        
+        if (empty($response['data'])) {
+            $status = 404;
+            $response['success'] = false;
+            $response['message'] = 'Employee not found.';
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('transisi::edit');
+        return response()->json($response, $status);
     }
 
     /**
@@ -62,9 +100,32 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse 
     {
-        //
+        $data = $request->only([
+            'name',
+            'company',
+            'email',
+            'status',
+        ]);
+
+        $status = 200;
+        $response['success'] = true;
+        $response['data'] = $data;
+        $response['message'] = 'Employee updated successfully.';
+
+        try {
+            $response['data'] = $this->employeeService->update($data, $id);
+        } catch (Exception $e) {
+
+            $status = 500;
+            $response['success'] = false;
+            $response['data'] = $data;
+            $response['message'] = $e->getMessage();
+
+        }
+
+        return response()->json($response, $status);
     }
 
     /**
@@ -72,8 +133,13 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
-        //
+        $status = 200;
+        $response['success'] = true;
+        $response['message'] = 'Employee deleted successfully.';
+        $this->employeeService->delete($id);
+
+        return response()->json($response, $status);
     }
 }
