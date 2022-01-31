@@ -14,7 +14,7 @@
                         </div>
                     @endif
                     
-                    <a href="{{ route('company.create') }}" class="btn btn-outline-primary">Add New Company</a>
+                    <a href="/company/create" class="btn btn-outline-primary">Add New Company</a>
                     <table class="table">
                         <thead>
                             <tr>
@@ -33,8 +33,8 @@
                                     <td>{{ $company->email }}</td>
                                     <td>{{ $company->website }}</td>
                                     <td>
-                                        <a href="{{ route('company.edit', $company->id) }}" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
-                                        <form action="{{ route('company.destroy', $company->id) }}" method="post" class="d-inline-flex">
+                                        <a href="/company/{{ $company->id }}/edit" class="btn btn-sm btn-outline-info">{{ __('Edit') }}</a>
+                                        <form action="/company/{{ $company->id }}" method="post" class="d-inline-flex">
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{{ __('Are you sure?') }}')">{{ __('Delete') }}</button>

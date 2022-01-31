@@ -41,7 +41,7 @@ class CompanyController extends Controller
     {
         Company::create($request->validated() + ['logo' => $request->file('logo_company')->store('company') ]);
 
-        return redirect()->route('company.index')->with('success', 'Company has been created!');
+        return redirect()->to('/company')->with('success', 'Company has been created!');
     }
 
     /**
@@ -84,7 +84,7 @@ class CompanyController extends Controller
         } else {
             $company->update($request->validated());
         }
-        return redirect()->route('company.index')->with('success', 'Company has been updated!');
+        return redirect()->to('/company')->with('success', 'Company has been updated!');
     }
 
     /**
@@ -98,7 +98,7 @@ class CompanyController extends Controller
         Storage::delete($company->logo);
         $company->delete();
 
-        return redirect()->route('company.index')->with('success', 'Company has been deleted!');
+        return redirect()->to('/company')->with('success', 'Company has been deleted!');
     }
 
     /**
