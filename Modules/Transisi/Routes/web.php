@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('transisi')->group(function() {
-    Route::get('/', 'TransisiController@index');
-});
+// Route::prefix('transisi')->group(function() {
+//     Route::get('/', 'TransisiController@index');
+// });

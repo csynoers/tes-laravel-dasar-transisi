@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Transisi\Repositories;
 
-use App\Models\Company;
+use Modules\Transisi\Repositories\Entities\Company;
 
 class CompanyRepository
 {
@@ -14,22 +14,33 @@ class CompanyRepository
 
     public function find($id)
     {
-        return Company::find($id);
+        return $this->model->find($id);
     }
 
-    public function fetch(array $params)
+    public function fetch()
     {
-        $query = Company::select();
-
-        if (isset($params['status'])) {
-            // $query->where('status', $params['status']);
-        }
+        $query = $this->model->query();
+        
         return $query->paginate();
     }
 
-    public function deleteCompany($id)
+    public function save($data)
     {
-        return Company::destroy($id);
+        $id = $this->model->save($data);
+        
+        return $this->model->find($id);
+    }
+
+    public function update($data, $id)
+    {
+        $this->model->update($data, $id);
+        
+        return $this->model->find($id);
+    }
+
+    public function delete($id)
+    {
+        return $this->model->delete($id);
     }
 
     // method lainya ...
