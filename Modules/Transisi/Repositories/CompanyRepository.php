@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Transisi\Repositories;
 
-use Modules\Transisi\Repositories\Entities\Company;
+use Modules\Transisi\Entities\Company;
 
 class CompanyRepository
 {
@@ -26,9 +26,7 @@ class CompanyRepository
 
     public function save($data)
     {
-        $id = $this->model->save($data);
-        
-        return $this->model->find($id);
+        return $this->model->insert($data);
     }
 
     public function update($data, $id)

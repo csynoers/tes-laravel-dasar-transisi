@@ -22,14 +22,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'auth'], function(){
-    Route::resource('company', CompanyController::class);
-    Route::resource('employee', EmployeeController::class);
+// Route::group(['middleware' => 'auth'], function(){
+//     Route::resource('company', CompanyController::class);
+//     Route::resource('employee', EmployeeController::class);
     
-    // ajax
-    Route::get('ajax/company', [CompanyController::class, 'dataAjax']);
-    // export pdf
-    Route::post('employee/pdf', [EmployeeController::class, 'exportPdf'])->name('employee.pdf');
-    // import excel
-    Route::post('employee/import', [EmployeeController::class, 'importExcel'])->name('employee.import');
-});
+//     // ajax
+//     Route::get('ajax/company', [CompanyController::class, 'dataAjax']);
+//     // export pdf
+//     Route::post('employee/pdf', [EmployeeController::class, 'exportPdf'])->name('employee.pdf');
+//     // import excel
+//     Route::post('employee/import', [EmployeeController::class, 'importExcel'])->name('employee.import');
+// });

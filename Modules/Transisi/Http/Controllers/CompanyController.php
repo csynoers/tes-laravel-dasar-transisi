@@ -7,6 +7,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
+use Modules\Transisi\Http\Requests\StoreCompanyRequest;
+use Modules\Transisi\Http\Requests\UpdateCompanyRequest;
 use Modules\Transisi\Services\CompanyService;
 
 class CompanyController extends Controller
@@ -44,28 +46,19 @@ class CompanyController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreCompanyRequest $request): JsonResponse
     {
-        $data = $request->only([
-            'name',
-            'email',
-            'website',
-            'logo_company',
-        ]);
-        $data['logo_company'] = $request->file('logo_company') ?? null;
-
         $status = 201;
         $response['success'] = true;
-        $response['data'] = $data;
         $response['message'] = 'Company created successfully.';
 
         try {
-            $response['data'] = $this->companyService->save($data);
+            $response['data'] = $this->companyService->save($request);
         } catch (Exception $e) {
 
             $status = 500;
             $response['success'] = false;
-            $response['data'] = $data;
+            $response['data'] = $request->validated();
             $response['message'] = $e->getMessage();
 
         }
@@ -100,28 +93,19 @@ class CompanyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id): JsonResponse 
+    public function update(UpdateCompanyRequest $request, $id): JsonResponse 
     {
-        $data = $request->only([
-            'name',
-            'email',
-            'website',
-            'logo_company',
-        ]);
-        $data['logo_company'] = $request->file('logo_company') ?? null;
-
         $status = 200;
         $response['success'] = true;
-        $response['data'] = $data;
         $response['message'] = 'Company updated successfully.';
 
         try {
-            $response['data'] = $this->companyService->update($data, $id);
+            $response['data'] = $this->companyService->update($request, $id);
         } catch (Exception $e) {
 
             $status = 500;
             $response['success'] = false;
-            $response['data'] = $data;
+            $response['data'] = $request->validated();
             $response['message'] = $e->getMessage();
 
         }

@@ -26,53 +26,35 @@ class CompanyService
         return $this->companyRepository->fetch();
     }
 
-    public function save($data)
-    {
-        $validator = Validator::make($data, [
-            'name' => 'required',
-            'email' => 'email|required|unique:companies',
-            'website' => 'required|url|unique:companies',
-            'logo_company' => 'required|image|file|mimes:png|dimensions:min_width=100,min_height=100|max:2048'
-        ]);
-        
-        if ($validator->fails()) {
-            throw new InvalidArgumentException($validator->errors()->first());
-        }
-        
-        $data['logo'] = $data['logo_company']->store('company');
-        unset($data['logo_company']);
+    public function save($request)
+    {   
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'website' => $request->website,
+            'logo' => $request->file('logo_company')->store('company'),
+        ]; 
+
         $result = $this->companyRepository->save($data);
         
         return $result;
     }
     
-    public function update($data, $id)
+    public function update($request, $id)
     {
         $company = $this->companyRepository->find($id);
 
-        $validator = Validator::make($data, [
-            'name' => 'required',
-            'email' => [
-                'email',
-                'required',
-            ],
-            'website' => [
-                'required',
-                'url',
-            ],
-            'logo_company' => 'image|file|mimes:png|dimensions:min_width=100,min_height=100|max:2048'
-        ]);        
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'website' => $request->website,
+        ]; 
 
-        if ($validator->fails()) {
-            throw new InvalidArgumentException($validator->errors()->first());
-        }
-
-        if ($data['logo_company']) {
+        if ($request->file('logo_company')) {
             Storage::delete($company->logo);
-            $data['logo'] = $data['logo_company']->store('company');
+            $data['logo'] = $request->file('logo_company')->store('company');
         }
-
-        unset($data['logo_company']);
+        
         $result = $this->companyRepository->update($data, $id);
         
         return $result;
