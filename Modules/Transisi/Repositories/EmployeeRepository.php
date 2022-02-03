@@ -1,7 +1,7 @@
 <?php
 namespace Modules\Transisi\Repositories;
 
-use Modules\Transisi\Repositories\Entities\Employee;
+use Modules\Transisi\Entities\Employee;
 
 class EmployeeRepository
 {
@@ -17,30 +17,43 @@ class EmployeeRepository
         return $this->model->find($id);
     }
 
-    public function fetch()
+    public function fetch(array $params)
     {
         $query = $this->model->query();
-        
+
+        if (isset($params['status'])) {
+            $query->where('status', $params['status']);
+        }
+
         return $query->paginate();
     }
 
     public function save($data)
     {
-        $id = $this->model->save($data);
-        
-        return $this->model->find($id);
+        return $this->model->create($data);
     }
 
     public function update($data, $id)
     {
-        $this->model->update($data, $id);
+        $employee = $this->model->find($id);
+        $employee->name = $data['name'];
+        $employee->company = $data['company'];
+        $employee->email = $data['email'];
+        $employee->status = $data['status'];
         
-        return $this->model->find($id);
+        return $employee->save();
     }
 
     public function delete($id)
     {
-        return $this->model->delete($id);
+        $employee = $this->model->find($id);
+        
+        return $employee->delete();
+    }
+
+    public function exportPdf(array $params)
+    {
+        return $this->model->latest()->filter($params)->get();
     }
 
     // method lainya ...

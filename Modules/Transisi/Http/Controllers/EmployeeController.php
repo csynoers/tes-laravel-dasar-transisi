@@ -7,37 +7,62 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Transisi\Services\EmployeeService;
+use Illuminate\Support\Facades\App;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Transisi\Constants\Status;
+use Modules\Transisi\Entities\Employee;
+use Modules\Transisi\Http\Requests\ImportEmployeeRequest;
+use Modules\Transisi\Http\Requests\StoreEmployeeRequest;
+use Modules\Transisi\Http\Requests\UpdateEmployeeRequest;
+use Modules\Transisi\Imports\EmployeesImport;
+use Modules\Transisi\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
 {
-    protected $employeeService;
+    protected $employeeRepository;
     
-    public function __construct(EmployeeService $employeeService)
+    public function __construct(EmployeeRepository $employeeRepository)
     {
-        $this->employeeService = $employeeService;
+        $this->employeeRepository = $employeeRepository;
     }
 
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
-        $status = 200;
-        $response['success'] = true;
-        $response['message'] = 'Employees retrieved successfully.';
-        
-        try {
-            $response['data'] = $this->employeeService->fetch();
-        } catch (Exception $e) {
-            $status = 404;
-            $response['success'] = false;
-            $response['data'] = $e->getMessage();
-            $response['message'] = 'Employees not found.';
+        if ($request->is('api/*')) {
+            $status = 200;
+            $response['success'] = true;
+            $response['message'] = 'Employees retrieved successfully.';
+            
+            try {
+                $response['data'] = $this->employeeRepository->fetch($request->toArray());
+            } catch (Exception $e) {
+                $status = 404;
+                $response['success'] = false;
+                $response['data'] = $e->getMessage();
+                $response['message'] = 'Employees not found.';
+            }
+    
+            return response()->json($response, $status);
         }
 
-        return response()->json($response, $status);
+        $status = Status::labels();
+        $employees = $this->employeeRepository->fetch($request->toArray());
+        return view('transisi::employee.index', compact('employees','status'));   
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     * @return Renderable
+     */
+    public function create()
+    {
+        $status = Status::labels();
+
+        return view('transisi::employee.create', compact('status'));
     }
 
     /**
@@ -45,32 +70,31 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        $data = $request->only([
-            'name',
-            'company',
-            'email',
-            'status',
-        ]);
-
-        $status = 201;
-        $response['success'] = true;
-        $response['data'] = $data;
-        $response['message'] = 'Employee created successfully.';
-
-        try {
-            $response['data'] = $this->employeeService->save($data);
-        } catch (Exception $e) {
-
-            $status = 500;
-            $response['success'] = false;
-            $response['data'] = $data;
-            $response['message'] = $e->getMessage();
-
+        $validate = $request->validated();
+        if ($request->is('api/*')) {
+            $status = 201;
+            $response['success'] = true;
+            $response['message'] = 'Employee created successfully.';
+    
+            try {
+                $this->employeeRepository->save($validate);
+            } catch (Exception $e) {
+    
+                $status = 500;
+                $response['success'] = false;
+                $response['data'] = $validate;
+                $response['message'] = $e->getMessage();
+    
+            }
+            
+            return response()->json($response, $status);
         }
 
-        return response()->json($response, $status);
+        $this->employeeRepository->save($validate);
+
+        return redirect()->to('/employee')->with('success', 'Employee has been created!');
     }
 
     /**
@@ -78,21 +102,37 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id): JsonResponse
+    public function show(Request $request, $id)
     {
-        $status = 200;
-        $response['success'] = true;
-        $response['data'] = $this->employeeService->find($id);
-        $response['message'] = 'Employee retrieved successfully.';
-        
-        if (empty($response['data'])) {
-            $status = 404;
-            $response['success'] = false;
-            $response['message'] = 'Employee not found.';
+        if ($request->is('api/*')) {
+            $status = 200;
+            $response['success'] = true;
+            $response['data'] = $this->employeeRepository->find($id);
+            $response['message'] = 'Employee retrieved successfully.';
+            
+            if (empty($response['data'])) {
+                $status = 404;
+                $response['success'] = false;
+                $response['message'] = 'Employee not found.';
+            }
+    
+            return response()->json($response, $status);
         }
-
-        return response()->json($response, $status);
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  Employee  $employee
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Employee  $employee)
+    {
+        $status = Status::labels();
+
+        return view('transisi::employee.edit', compact(['employee','status']));
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -100,32 +140,31 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id): JsonResponse 
+    public function update(UpdateEmployeeRequest $request, Employee $employee) 
     {
-        $data = $request->only([
-            'name',
-            'company',
-            'email',
-            'status',
-        ]);
-
-        $status = 200;
-        $response['success'] = true;
-        $response['data'] = $data;
-        $response['message'] = 'Employee updated successfully.';
-
-        try {
-            $response['data'] = $this->employeeService->update($data, $id);
-        } catch (Exception $e) {
-
-            $status = 500;
-            $response['success'] = false;
-            $response['data'] = $data;
-            $response['message'] = $e->getMessage();
-
+        $validate = $request->validated();
+        if ($request->is('api/*')) {
+            $status = 200;
+            $response['success'] = true;
+            $response['message'] = 'Employee updated successfully.';
+    
+            try {
+                $this->employeeRepository->update($validate, $employee->id);
+            } catch (Exception $e) {
+    
+                $status = 500;
+                $response['success'] = false;
+                $response['data'] = $validate;
+                $response['message'] = $e->getMessage();
+    
+            }
+            
+            return response()->json($response, $status);
         }
+        
+        $this->employeeRepository->update($validate, $employee->id);
 
-        return response()->json($response, $status);
+        return redirect()->to('/employee')->with('success', 'Employee has been updated!');
     }
 
     /**
@@ -133,13 +172,42 @@ class EmployeeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id): JsonResponse
+    public function destroy(Employee $employee, Request $request)
     {
-        $status = 200;
-        $response['success'] = true;
-        $response['message'] = 'Employee deleted successfully.';
-        $this->employeeService->delete($id);
+        $this->employeeRepository->delete($employee->id);
 
-        return response()->json($response, $status);
+        if ($request->is('api/*')) {
+            $status = 200;
+            $response['success'] = true;
+            $response['message'] = 'Employee deleted successfully.';
+    
+            return response()->json($response, $status);            
+        }
+
+        return redirect()->route('employee.index')->with('success', 'Employee has been deleted!');
+    }
+
+    /**
+     * Export PDF.
+     *
+     * @param  \App\Http\Requests  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf(Request $request)
+    {
+        $status = Status::labels();
+        $employees = $this->employeeRepository->exportPdf($request->toArray());
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('transisi::employee.pdf', compact(['employees','status']));
+
+        return $pdf->stream();
+    }
+
+    public function importExcel(ImportEmployeeRequest $request){
+
+        $request->validated();
+        Excel::import(new EmployeesImport, request()->file('file'));
+             
+        return redirect()->to('/employee')->with('success', 'Employee has been imported!');
     }
 }

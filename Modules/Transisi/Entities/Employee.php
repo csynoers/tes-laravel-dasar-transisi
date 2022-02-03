@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Transisi\Entities;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
 {
@@ -46,4 +46,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Company::class, 'company', 'name');
     }
+    
+    // protected static function newFactory()
+    // {
+    //     return \Modules\Transisi\Database\factories\EmployeeFactory::new();
+    // }
 }

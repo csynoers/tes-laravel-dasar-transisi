@@ -4,6 +4,7 @@ namespace Modules\Transisi\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Transisi\Entities\Company;
 
 class TransisiDatabaseSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class TransisiDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        // $this->call("CompanyTableSeeder");
+        Company::factory()->count(100)->create();
+        echo " Insert: companies \n\n";
     }
 }

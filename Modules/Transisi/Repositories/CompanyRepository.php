@@ -26,19 +26,32 @@ class CompanyRepository
 
     public function save($data)
     {
-        return $this->model->insert($data);
+        return $this->model->create($data);
     }
 
     public function update($data, $id)
-    {
-        $this->model->update($data, $id);
-        
-        return $this->model->find($id);
+    {   
+        $company = $this->model->find($id);
+        $company->name = $data['name'];
+        $company->email = $data['email'];
+        $company->website = $data['website'];
+
+        if ( ! empty($data['logo']) ) {
+            $company->logo = $data['logo'];
+        }
+
+        return $company->save();
     }
 
     public function delete($id)
     {
-        return $this->model->delete($id);
+        $company = $this->model->find($id);
+        return $company->delete();
+    }
+
+    public function dataAjax($terms)
+    {
+        return $this->model->filter($terms)->get();
     }
 
     // method lainya ...

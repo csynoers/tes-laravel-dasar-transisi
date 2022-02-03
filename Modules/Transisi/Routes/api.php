@@ -18,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware('auth:api')->group(function () {
-    Route::resource('company', CompanyController::class);
-    Route::resource('employee', EmployeeController::class);
+    Route::resource('company', CompanyController::class)->except(['create', 'edit']);
+    Route::resource('employee', EmployeeController::class)->except(['create', 'edit']);
 });
